@@ -75,7 +75,9 @@
   // Link oficial do Google para escrever avaliação
   let googleUrl = '';
   if (pid) googleUrl = 'https://search.google.com/local/writereview?placeid=' + encodeURIComponent(pid);
-  else if (/^https:\/\/(g\.page|search\.google\.com|www\.google\.|maps\.app\.goo\.gl|goo\.gl|maps\.google\.)/i.test(url)) googleUrl = url;
+  else if (/^https:\/\/(g\.page|share\.google|search\.google\.com|www\.google\.|maps\.app\.goo\.gl|goo\.gl|maps\.google\.)/i.test(url)) googleUrl = url;
+  // Links que abrem direto a tela de "escrever avaliação"
+  const directReview = !!pid || /writereview|\/review\b|lrd=/i.test(url);
 
   if (loja) { document.getElementById('storeName').textContent = loja; document.title = 'Avalie ' + loja; }
 
@@ -189,6 +191,7 @@
       <textarea id="txt" aria-label="Texto da avaliação">${esc(text)}</textarea>
       <button class="btn" id="go">Copiar e publicar no Google</button>
       <ol class="steps">
+        ${directReview ? '' : '<li>No perfil da loja, toque em <b>Avaliar</b> / <b>Escrever uma avaliação</b>.</li>'}
         <li>No Google, toque em <b>${state.stars} estrela${state.stars>1?'s':''}</b>.</li>
         <li>Segure no campo de texto e toque em <b>Colar</b>.</li>
         <li>Toque em <b>Publicar</b>. Obrigado! 💙</li>
