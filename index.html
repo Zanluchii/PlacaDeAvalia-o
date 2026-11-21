@@ -1,0 +1,215 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Avalie nossa loja</title>
+<meta name="robots" content="noindex">
+<style>
+  :root{
+    --bg:#f6f7fb; --card:#ffffff; --text:#1d2433; --muted:#667085; --line:#e4e7ec;
+    --brand:#1a73e8; --brand-ink:#ffffff; --star:#fbbc04; --ok:#188038; --soft:#eef4ff;
+  }
+  @media (prefers-color-scheme: dark){
+    :root{ --bg:#0f1218; --card:#181c24; --text:#e8eaf0; --muted:#9aa3b2; --line:#2a303b; --soft:#1c2740; }
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--text);
+    font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;-webkit-tap-highlight-color:transparent}
+  .wrap{max-width:480px;margin:0 auto;padding:20px 16px 40px;min-height:100svh;display:flex;flex-direction:column}
+  header{text-align:center;margin:8px 0 18px}
+  header .kicker{font-size:13px;color:var(--muted);letter-spacing:.04em;text-transform:uppercase}
+  header h1{font-size:24px;margin:6px 0 0;line-height:1.2}
+  .progress{height:6px;background:var(--line);border-radius:99px;overflow:hidden;margin-bottom:18px}
+  .progress i{display:block;height:100%;width:0;background:var(--brand);transition:width .3s}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:22px 18px;
+    box-shadow:0 6px 24px rgba(16,24,40,.06);animation:in .25s ease}
+  @keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  h2{font-size:20px;margin:0 0 6px;text-align:center}
+  p.sub{margin:0 0 18px;color:var(--muted);text-align:center;font-size:15px}
+  .stars{display:flex;justify-content:center;gap:6px;margin:8px 0 6px}
+  .stars button{background:none;border:0;padding:4px;cursor:pointer;font-size:44px;line-height:1;color:var(--line);transition:transform .1s,color .1s}
+  .stars button.on{color:var(--star)}
+  .stars button:active{transform:scale(.9)}
+  .star-label{text-align:center;height:22px;color:var(--muted);font-weight:600}
+  .opts{display:grid;gap:10px}
+  .opt{display:flex;align-items:center;gap:12px;width:100%;padding:16px;border-radius:14px;border:1.5px solid var(--line);
+    background:var(--card);color:var(--text);font-size:17px;font-weight:600;cursor:pointer;text-align:left}
+  .opt .e{font-size:26px}
+  .opt:active,.opt.sel{border-color:var(--brand);background:var(--soft)}
+  .btn{display:block;width:100%;padding:17px;border:0;border-radius:14px;background:var(--brand);color:var(--brand-ink);
+    font-size:17px;font-weight:700;cursor:pointer;margin-top:14px}
+  .btn.ghost{background:transparent;color:var(--brand);border:1.5px solid var(--line)}
+  .btn:disabled{opacity:.5}
+  textarea{width:100%;min-height:150px;padding:14px;border-radius:14px;border:1.5px solid var(--line);background:var(--bg);
+    color:var(--text);font:inherit;font-size:16px;line-height:1.45;resize:vertical}
+  .mini-stars{text-align:center;font-size:28px;color:var(--star);letter-spacing:2px;margin-bottom:10px}
+  ol.steps{margin:14px 0 0;padding-left:22px;color:var(--text);font-size:15px;line-height:1.6}
+  .note{font-size:13px;color:var(--muted);text-align:center;margin-top:12px}
+  .back{background:none;border:0;color:var(--muted);font-size:15px;margin-top:14px;cursor:pointer;align-self:center}
+  footer{margin-top:auto;padding-top:24px;text-align:center;font-size:12px;color:var(--muted)}
+  .toast{position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ok);color:#fff;padding:12px 18px;
+    border-radius:99px;font-weight:600;opacity:0;transition:opacity .2s;pointer-events:none}
+  .toast.show{opacity:1}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="kicker">Sua opinião em 30 segundos</div>
+    <h1 id="storeName">Avalie nossa loja</h1>
+  </header>
+  <div class="progress"><i id="bar"></i></div>
+  <main id="app"></main>
+  <footer>Toque nas respostas — não precisa digitar nada.</footer>
+</div>
+<div class="toast" id="toast">Texto copiado ✓</div>
+
+<script>
+(function(){
+  const qs = new URLSearchParams(location.search);
+  const loja = (qs.get('loja') || '').trim();
+  const pid  = (qs.get('pid')  || '').trim();
+  const url  = (qs.get('url')  || '').trim();
+
+  // Link oficial do Google para escrever avaliação
+  let googleUrl = '';
+  if (pid) googleUrl = 'https://search.google.com/local/writereview?placeid=' + encodeURIComponent(pid);
+  else if (/^https:\/\/(g\.page|search\.google\.com|www\.google\.|maps\.app\.goo\.gl|goo\.gl|maps\.google\.)/i.test(url)) googleUrl = url;
+
+  if (loja) { document.getElementById('storeName').textContent = loja; document.title = 'Avalie ' + loja; }
+
+  const app = document.getElementById('app');
+  const bar = document.getElementById('bar');
+  const pick = a => a[Math.floor(Math.random()*a.length)];
+
+  const STAR_LABELS = ['', 'Muito ruim', 'Ruim', 'Regular', 'Bom', 'Excelente!'];
+
+  const QUESTIONS = [
+    { key:'atendimento', q:'Como foi o atendimento?', opts:[
+      {v:3,e:'😍',t:'Excelente'},{v:2,e:'🙂',t:'Bom'},{v:1,e:'😕',t:'Pode melhorar'}]},
+    { key:'qualidade', q:'E a qualidade dos produtos/serviços?', opts:[
+      {v:3,e:'⭐',t:'Ótima'},{v:2,e:'👍',t:'Boa'},{v:1,e:'👎',t:'Deixou a desejar'}]},
+    { key:'rapidez', q:'O tempo de espera foi…', opts:[
+      {v:3,e:'⚡',t:'Rápido'},{v:2,e:'⏱️',t:'Normal'},{v:1,e:'🐢',t:'Demorado'}]},
+    { key:'ambiente', q:'O que achou do ambiente?', opts:[
+      {v:3,e:'✨',t:'Limpo e agradável'},{v:2,e:'🙂',t:'Ok'},{v:1,e:'😐',t:'Precisa melhorar'}]},
+    { key:'preco', q:'E o preço?', opts:[
+      {v:3,e:'💰',t:'Justo / vale a pena'},{v:2,e:'🤔',t:'Na média'},{v:1,e:'💸',t:'Caro'}]},
+    { key:'recomenda', q:'Você recomendaria para alguém?', opts:[
+      {v:3,e:'🙌',t:'Com certeza'},{v:2,e:'🤷',t:'Talvez'},{v:1,e:'🙅',t:'Não'}]},
+  ];
+
+  const PHRASES = {
+    atendimento:{3:['Atendimento excelente, equipe muito atenciosa.','Fui super bem atendido(a), pessoal muito simpático.','O atendimento foi nota 10.'],
+                 2:['Atendimento bom e educado.','Fui bem atendido(a).'],
+                 1:['O atendimento pode melhorar.','Senti falta de mais atenção no atendimento.']},
+    qualidade:{3:['A qualidade é ótima.','Produtos/serviços de muita qualidade.'],
+               2:['A qualidade é boa.','Qualidade dentro do esperado.'],
+               1:['A qualidade deixou a desejar.','Esperava uma qualidade melhor.']},
+    rapidez:{3:['Tudo foi bem rápido.','Não precisei esperar quase nada.'],
+             2:['O tempo de espera foi normal.','Espera tranquila, dentro do normal.'],
+             1:['A espera foi demorada.','Demorou mais do que eu esperava.']},
+    ambiente:{3:['Ambiente limpo e agradável.','Lugar muito organizado e aconchegante.'],
+              2:['O ambiente é ok.'],
+              1:['O ambiente precisa de melhorias.']},
+    preco:{3:['Preço justo, vale a pena.','Ótimo custo-benefício.'],
+           2:['Preço na média.'],
+           1:['Achei o preço um pouco alto.','O preço poderia ser melhor.']},
+    recomenda:{3:['Recomendo muito!','Com certeza voltarei e recomendo!'],
+               2:['Talvez eu volte.'],
+               1:['Infelizmente não recomendaria por enquanto.']},
+  };
+  const OPEN = {5:['Experiência excelente!','Adorei!','Muito bom!'],4:['Gostei bastante.','Boa experiência.'],
+                3:['Experiência razoável.'],2:['Não foi uma boa experiência.'],1:['Experiência ruim.']};
+
+  const state = { stars:0, answers:{}, step:0 };
+  const TOTAL = QUESTIONS.length + 2;
+  const setBar = n => bar.style.width = Math.round(n/TOTAL*100) + '%';
+
+  function el(html){ const d=document.createElement('div'); d.innerHTML=html.trim(); return d.firstChild; }
+  function esc(s){ return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+  function renderError(){
+    setBar(0);
+    app.innerHTML = '<div class="card"><h2>Link incompleto</h2><p class="sub">Este QR Code ainda não foi configurado com a loja no Google. Peça ao estabelecimento para gerar a placa novamente.</p></div>';
+  }
+
+  function renderStars(){
+    setBar(0);
+    const c = el(`<div class="card">
+      <h2>Como foi sua experiência?</h2>
+      <p class="sub">Toque nas estrelas</p>
+      <div class="stars">${[1,2,3,4,5].map(i=>`<button aria-label="${i} estrela(s)" data-i="${i}">★</button>`).join('')}</div>
+      <div class="star-label" id="sl"></div>
+    </div>`);
+    const btns = c.querySelectorAll('.stars button');
+    const paint = n => btns.forEach(b=>b.classList.toggle('on', +b.dataset.i<=n));
+    paint(state.stars);
+    btns.forEach(b=>b.addEventListener('click',()=>{
+      state.stars=+b.dataset.i; paint(state.stars);
+      c.querySelector('#sl').textContent = STAR_LABELS[state.stars];
+      setTimeout(()=>{ state.step=0; renderQuestion(); }, 350);
+    }));
+    app.replaceChildren(c);
+  }
+
+  function renderQuestion(){
+    const Q = QUESTIONS[state.step];
+    setBar(state.step+1);
+    const c = el(`<div class="card">
+      <h2>${esc(Q.q)}</h2>
+      <p class="sub">Pergunta ${state.step+1} de ${QUESTIONS.length}</p>
+      <div class="opts">${Q.opts.map(o=>`<button class="opt${state.answers[Q.key]===o.v?' sel':''}" data-v="${o.v}"><span class="e">${o.e}</span>${esc(o.t)}</button>`).join('')}</div>
+      <button class="btn ghost" id="skip">Pular</button>
+    </div>`);
+    c.querySelectorAll('.opt').forEach(b=>b.addEventListener('click',()=>{
+      state.answers[Q.key]=+b.dataset.v; b.classList.add('sel'); setTimeout(next,180);
+    }));
+    c.querySelector('#skip').addEventListener('click',()=>{ delete state.answers[Q.key]; next(); });
+    app.replaceChildren(c);
+    const back = el('<button class="back">← Voltar</button>');
+    back.addEventListener('click',()=>{ if(state.step===0) renderStars(); else { state.step--; renderQuestion(); } });
+    app.appendChild(back);
+  }
+  function next(){ state.step++; if(state.step<QUESTIONS.length) renderQuestion(); else renderFinal(); }
+
+  function buildText(){
+    const parts = [pick(OPEN[state.stars])];
+    QUESTIONS.forEach(Q=>{ const v=state.answers[Q.key]; if(v) parts.push(pick(PHRASES[Q.key][v])); });
+    return parts.join(' ');
+  }
+
+  function renderFinal(){
+    setBar(TOTAL);
+    const text = buildText();
+    const c = el(`<div class="card">
+      <h2>Pronto! Sua avaliação:</h2>
+      <div class="mini-stars">${'★'.repeat(state.stars)}<span style="color:var(--line)">${'★'.repeat(5-state.stars)}</span></div>
+      <textarea id="txt" aria-label="Texto da avaliação">${esc(text)}</textarea>
+      <button class="btn" id="go">Copiar e publicar no Google</button>
+      <ol class="steps">
+        <li>No Google, toque em <b>${state.stars} estrela${state.stars>1?'s':''}</b>.</li>
+        <li>Segure no campo de texto e toque em <b>Colar</b>.</li>
+        <li>Toque em <b>Publicar</b>. Obrigado! 💙</li>
+      </ol>
+      <p class="note">O texto já foi escrito para você — se quiser, pode editar acima.</p>
+    </div>`);
+    c.querySelector('#go').addEventListener('click', async ()=>{
+      const t = c.querySelector('#txt').value;
+      try { await navigator.clipboard.writeText(t); }
+      catch(e){ const ta=c.querySelector('#txt'); ta.focus(); ta.select(); try{document.execCommand('copy');}catch(_){} }
+      const toast=document.getElementById('toast'); toast.classList.add('show');
+      setTimeout(()=>{ location.href = googleUrl; }, 700);
+    });
+    app.replaceChildren(c);
+    const back = el('<button class="back">← Refazer</button>');
+    back.addEventListener('click',()=>{ state.stars=0; state.answers={}; renderStars(); });
+    app.appendChild(back);
+  }
+
+  googleUrl ? renderStars() : renderError();
+})();
+</script>
+</body>
+</html>
