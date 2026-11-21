@@ -69,8 +69,13 @@
 (function(){
   const qs = new URLSearchParams(location.search);
   const loja = (qs.get('loja') || '').trim();
-  const pid  = (qs.get('pid')  || '').trim();
   const url  = (qs.get('url')  || '').trim();
+  // Placas já impressas com link de perfil: aqui ligamos o link ao Place ID,
+  // para abrir direto a tela de avaliação sem reimprimir o QR Code.
+  const KNOWN = {
+    'https://share.google/5L6NU56w9g4pvrR9R': 'ChIJiQYV_zNF65QRosTyersr87A', // Seven Bees Language School
+  };
+  const pid  = (qs.get('pid') || KNOWN[url] || '').trim();
 
   // Link oficial do Google para escrever avaliação
   let googleUrl = '';

@@ -19,6 +19,8 @@ O modo com perguntas rápidas (o site monta o texto) continua disponível: basta
      **ou** o link de *“Pedir avaliações”* do Perfil da Empresa no Google (`https://g.page/r/…/review`).
 4. Clique em **Testar o link**, depois em **Imprimir placa (A6)** ou **Baixar QR Code**.
 
+A placa da Seven Bees usa o Place ID `ChIJiQYV_zNF65QRosTyersr87A` (ligado ao link já impresso em `index.html`).
+
 Um único site atende todas as lojas: os dados de cada uma vão dentro do próprio QR Code.
 
 ## Por que o cliente precisa tocar em "Publicar" no Google?
