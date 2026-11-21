@@ -211,7 +211,17 @@
     app.appendChild(back);
   }
 
-  googleUrl ? renderStars() : renderError();
+  // Padrão: vai direto para o Google (sem perguntas, sem copiar/colar).
+  // Para usar o modo com perguntas rápidas, adicione &modo=perguntas ao link.
+  if (!googleUrl) renderError();
+  else if (qs.get('modo') === 'perguntas') renderStars();
+  else {
+    document.querySelector('footer').textContent = '';
+    bar.parentNode.style.display = 'none';
+    app.innerHTML = '<div class="card"><h2>Abrindo o Google…</h2><p class="sub">Se não abrir sozinho, toque no botão abaixo.</p>' +
+      '<a class="btn" style="text-align:center;text-decoration:none" href="' + esc(googleUrl) + '">Avaliar no Google ⭐</a></div>';
+    location.replace(googleUrl);
+  }
 })();
 </script>
 </body>

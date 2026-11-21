@@ -1,6 +1,8 @@
 # Placa de Avaliação (QR Code → Google)
 
-Site leve para colocar em uma plaquinha no balcão da loja. O cliente lê o QR Code, responde algumas perguntas com toques (sem digitar nada) e o site monta o texto da avaliação. Depois ele publica a avaliação no perfil da loja no Google.
+Site leve para colocar em uma plaquinha no balcão da loja. O cliente lê o QR Code e é levado **direto ao Google** para avaliar a loja, sem copiar e colar.
+
+O modo com perguntas rápidas (o site monta o texto) continua disponível: basta acrescentar `&modo=perguntas` ao link.
 
 ## Arquivos
 - `index.html`: página que o cliente vê (estrelas + 6 perguntas rápidas + texto pronto).
