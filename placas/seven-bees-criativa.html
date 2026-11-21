@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<title>Seven Bees – Placa</title>
+<script src="../qrcode.js"></script>
+<style>
+  @font-face{font-family:Fredoka;font-weight:400;src:url(fonts/fredoka-latin-400-normal.woff2) format("woff2")}
+  @font-face{font-family:Fredoka;font-weight:600;src:url(fonts/fredoka-latin-600-normal.woff2) format("woff2")}
+  @font-face{font-family:Fredoka;font-weight:700;src:url(fonts/fredoka-latin-700-normal.woff2) format("woff2")}
+  @page{size:148mm 210mm;margin:0}
+  :root{--honey:#FFC52E;--honey2:#F5A800;--ink:#17130B;--cream:#FFF8E6}
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{background:#ddd}
+  body{display:flex;justify-content:center;padding:0}
+  .sheet{position:relative;width:148mm;height:210mm;overflow:hidden;background:var(--honey);
+    font-family:Fredoka,system-ui,sans-serif;color:var(--ink);-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .comb{position:absolute;inset:0;width:100%;height:100%}
+  .glow{position:absolute;width:150mm;height:150mm;left:-1mm;top:40mm;border-radius:50%;
+    background:radial-gradient(circle,rgba(255,240,180,.85) 0%,rgba(255,240,180,0) 65%)}
+
+  .pill{position:absolute;top:9mm;left:9mm;background:var(--ink);color:var(--honey);font-weight:600;
+    font-size:3.6mm;padding:1.8mm 4mm;border-radius:99px;letter-spacing:.3mm}
+  .pill b{color:#fff}
+
+  .head{position:absolute;top:19mm;left:9mm;width:96mm}
+  .bzz{font-weight:700;font-size:15mm;line-height:.9;letter-spacing:-.3mm;
+    color:#fff;-webkit-text-stroke:1.1mm var(--ink);paint-order:stroke fill;text-shadow:1.2mm 1.2mm 0 var(--ink)}
+  .h2{font-weight:700;font-size:7.6mm;line-height:1.05;margin-top:2.5mm}
+  .h2 .g{background:#fff;border:0.7mm solid var(--ink);border-radius:2.5mm;padding:0 1.8mm;display:inline-block;margin-top:1mm;
+    box-shadow:.9mm .9mm 0 var(--ink)}
+  .g span:nth-child(1),.g span:nth-child(4){color:#4285F4}.g span:nth-child(2),.g span:nth-child(6){color:#EA4335}
+  .g span:nth-child(3){color:#FBBC05}.g span:nth-child(5){color:#34A853}
+  .en{font-size:3.6mm;font-weight:600;margin-top:2mm;opacity:.75;font-style:italic}
+
+  .bee{position:absolute;right:-4mm;top:12mm;width:58mm;transform:rotate(12deg)}
+  .trail{position:absolute;right:20mm;top:42mm;width:46mm}
+
+  .card{position:absolute;left:50%;top:75mm;transform:translateX(-50%);width:76mm;overflow:hidden;background:#fff;border:1.2mm solid var(--ink);
+    border-radius:7mm;padding:4mm 5mm 3mm;box-shadow:2.2mm 2.2mm 0 var(--ink);text-align:center}
+  .drip{position:absolute;left:0;right:0;top:0;height:10mm}
+  .stars{position:relative;font-size:7.5mm;letter-spacing:1.2mm;color:#FFB800;-webkit-text-stroke:.5mm var(--ink);margin:4mm 0 2mm}
+  .qr{width:54mm;height:54mm;margin:0 auto}
+  .qr svg{width:100%;height:100%;display:block}
+  .scan{font-weight:700;font-size:4.4mm;margin-top:2mm}
+
+  .steps{position:absolute;left:0;right:0;top:162mm;display:flex;justify-content:center;gap:5mm}
+  .step{width:36mm;text-align:center;font-weight:600;font-size:3.5mm;line-height:1.15}
+  .hex{width:13mm;height:14.5mm;margin:0 auto 1.4mm;background:var(--ink);display:flex;align-items:center;justify-content:center;
+    clip-path:polygon(50% 0,100% 25%,100% 75%,50% 100%,0 75%,0 25%);color:var(--honey);font-weight:700;font-size:6.5mm}
+
+  .ribbon{position:absolute;left:0;right:0;bottom:0;height:14mm;background:var(--ink);color:#fff;display:flex;align-items:center;
+    justify-content:center;font-weight:600;font-size:5mm;gap:2mm}
+  .ribbon b{color:var(--honey)}
+  .ribbon-edge{position:absolute;left:0;right:0;bottom:13.5mm;height:6mm}
+  @media print{html,body{background:none}}
+</style>
+</head>
+<body>
+<div class="sheet" id="sheet">
+  <!-- favo de mel -->
+  <svg class="comb" viewBox="0 0 148 210" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <defs>
+      <pattern id="hx" width="15" height="26" patternUnits="userSpaceOnUse" patternTransform="scale(1.15)">
+        <path d="M7.5 0 L15 4.33 L15 13 L7.5 17.33 L0 13 L0 4.33 Z M7.5 17.33 L7.5 26 M0 30.33 M15 13 L22.5 17.33 M0 13 L-7.5 17.33"
+          fill="none" stroke="#E89B00" stroke-width="1.1" opacity=".55"/>
+      </pattern>
+    </defs>
+    <rect width="148" height="210" fill="url(#hx)"/>
+  </svg>
+  <div class="glow"></div>
+
+  <div class="pill">🐝 <b>SEVEN BEES</b> LANGUAGE SCHOOL</div>
+
+  <div class="head">
+    <div class="bzz">Bzzz!<br>Gostou?</div>
+    <div class="h2">Avalie a gente no<br><span class="g"><span>G</span><span>o</span><span>o</span><span>g</span><span>l</span><span>e</span></span></div>
+    <div class="en">Loved it? Rate us! ⭐</div>
+  </div>
+
+  <!-- trilha de voo -->
+  <svg class="trail" viewBox="0 0 46 30" aria-hidden="true">
+    <path d="M44 2 C 30 4, 38 18, 26 18 C 16 18, 22 6, 12 10 C 4 13, 6 24, 2 28" fill="none" stroke="#17130B"
+      stroke-width=".9" stroke-dasharray="2 2.2" stroke-linecap="round"/>
+  </svg>
+
+  <!-- abelha -->
+  <svg class="bee" viewBox="0 0 120 110" aria-hidden="true">
+    <g stroke="#17130B" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round">
+      <ellipse cx="50" cy="26" rx="20" ry="25" transform="rotate(-25 50 26)" fill="#E9F6FF" opacity=".95"/>
+      <ellipse cx="74" cy="24" rx="17" ry="22" transform="rotate(20 74 24)" fill="#E9F6FF" opacity=".95"/>
+      <path d="M103 64 L117 70 L103 76 Z" fill="#17130B"/>
+      <ellipse cx="66" cy="70" rx="40" ry="28" fill="#FFC52E"/>
+    </g>
+    <clipPath id="body"><ellipse cx="66" cy="70" rx="38.4" ry="26.4"/></clipPath>
+    <g clip-path="url(#body)" fill="#17130B">
+      <rect x="60" y="38" width="11" height="70" rx="2"/>
+      <rect x="80" y="38" width="10" height="70" rx="2"/>
+      <rect x="98" y="38" width="10" height="70" rx="2"/>
+    </g>
+    <g stroke="#17130B" stroke-width="3.2" stroke-linecap="round" fill="none">
+      <path d="M33 48 C 28 34, 22 30, 16 30"/><path d="M42 45 C 42 32, 38 24, 34 20"/>
+    </g>
+    <circle cx="16" cy="30" r="4" fill="#17130B"/><circle cx="34" cy="20" r="4" fill="#17130B"/>
+    <circle cx="38" cy="64" r="6.5" fill="#17130B"/><circle cx="40" cy="62" r="2.2" fill="#fff"/>
+    <circle cx="28" cy="76" r="4.5" fill="#FF8A8A" opacity=".8"/>
+    <path d="M36 80 Q 44 88 52 80" fill="none" stroke="#17130B" stroke-width="3" stroke-linecap="round"/>
+    <path d="M96 99 l 2 -10 M104 96 l -1 -9" stroke="none"/>
+  </svg>
+
+  <div class="card">
+    <!-- mel escorrendo -->
+    <svg class="drip" viewBox="0 0 100 14" preserveAspectRatio="none" aria-hidden="true">
+      <path d="M0 0 H100 V4 C 96 4, 96 11, 92 11 C 88 11, 89 5, 84 5 C 79 5, 80 13, 74 13 C 69 13, 70 5, 64 5 C 60 5, 60 8, 56 8 C 52 8, 53 4, 48 4
+        C 43 4, 44 12, 38 12 C 33 12, 34 5, 28 5 C 24 5, 24 9, 20 9 C 16 9, 16 4, 11 4 C 6 4, 7 10, 3 10 C 1 10, 0 7, 0 6 Z" fill="#FFC52E"/>
+    </svg>
+    <div class="stars">★★★★★</div>
+    <div class="qr" id="qr"></div>
+    <div class="scan">📱 Aponte a câmera aqui!</div>
+  </div>
+
+  <div class="steps">
+    <div class="step"><div class="hex">1</div>Aponte a câmera<br>do celular</div>
+    <div class="step"><div class="hex">2</div>Responda com<br>toques rápidos</div>
+    <div class="step"><div class="hex">3</div>Publique no<br>Google ⭐</div>
+  </div>
+
+  <svg class="ribbon-edge" viewBox="0 0 148 6" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M0 6 L0 3 L6 0 L12 3 L18 0 L24 3 L30 0 L36 3 L42 0 L48 3 L54 0 L60 3 L66 0 L72 3 L78 0 L84 3 L90 0 L96 3 L102 0 L108 3 L114 0 L120 3 L126 0 L132 3 L138 0 L144 3 L148 1 L148 6 Z" fill="#17130B"/>
+  </svg>
+  <div class="ribbon">Sua opinião vale <b>mel</b> pra gente! 🍯</div>
+</div>
+<script>
+  const url = new URLSearchParams(location.search).get('qr') ||
+    'https://zanluchii.github.io/PlacaDeAvalia-o/index.html?loja=Seven+Bees+Language+School&url=https%3A%2F%2Fshare.google%2F5L6NU56w9g4pvrR9R';
+  const q = qrcode(0,'Q'); q.addData(url); q.make();
+  document.getElementById('qr').innerHTML = q.createSvgTag({cellSize:4, margin:0, scalable:true});
+</script>
+</body>
+</html>
